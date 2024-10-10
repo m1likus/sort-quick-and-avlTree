@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.2)
 
 project(sort_avl_quick)
 
-add_executable(main.cpp quickSort.hpp avlTree.hpp)
+add_executable( sort_avl_quick main.cpp quickSort.hpp avlTree.hpp)
 
 # REPORT
 message( STATUS "")

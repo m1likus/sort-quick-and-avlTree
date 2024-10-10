@@ -10,8 +10,9 @@ public:
 	int height;
 
 	bool operator==(const Node<T>& other) {
-		if (key == other.key)
+		if (key == other.key) {
 			return true;
+		}
 		return false;
 	}
 	bool operator!=(const Node<T>& other) {
@@ -20,180 +21,211 @@ public:
 };
 
 template <typename T>
-class avlTree {
+class AvlTree {
 protected:
 	inline bool HasLeftChild(Node<T>* node) {
-		if (node->left == 0) return false;
+		if (node->left == 0) {
+			return false;
+		}
 		return true;
 	}
 	inline bool HasRightChild(Node<T>* node) {
-		if (node->right == 0) return false;
+		if (node->right == 0) {
+			return false;
+		}
 		return true;
 	}
 	inline bool HasParent(Node<T>* node) {
-		if (node->parent == 0) return false;
+		if (node->parent == 0) {
+			return false;
+		}
 		return true;
 	}
 	Node<T>* root;
 public:
 	template<typename T>
-	class avlTreeIterator {
+	class AvlTreeIterator {
 	protected:
 		T* iterator;
-		Node<T>* it_node;
-		avlTree<T>* it_tree;
+		Node<T>* itNode;
+		AvlTree<T>* itTree;
 	public:
-		avlTreeIterator(T& key, Node<T>& new_node, avlTree<T>& tree) {
+		AvlTreeIterator(T& key, Node<T>& newNode, AvlTree<T>& tree) {
 			iterator = &key;
-			it_node = &new_node;
-			it_tree = &tree;
+			itNode = &newNode;
+			itTree = &tree;
 		}
-		avlTreeIterator(Node<T>& other, avlTree<T>& other_tree) {
+		AvlTreeIterator(Node<T>& other, AvlTree<T>& otherTree) {
 			iterator = &(other.key);
-			it_node = &other;
-			it_tree = &other_tree;
+			itNode = &other;
+			itTree = &otherTree;
 		}
 		T& operator*() const {
-			return (*iterator);
+			return *iterator;
 		}
 		T* operator->() const {
 			return iterator;
 		}
 
-		avlTreeIterator<T>& operator++() {
-			if (it_node->right != 0) { //если есть справа, то идем вправо...
-				it_node = it_node->right;
-				while (it_node->left != 0) //если есть слева, то идем влево до конца
-					it_node = it_node->left;
-				iterator = &(it_node->key);
+		AvlTreeIterator<T>& operator++() {
+			if (itNode->right != 0) { //если есть справа, то идем вправо...
+				itNode = itNode->right;
+				while (itNode->left != 0) {//если есть слева, то идем влево до конца
+					itNode = itNode->left;
+				}
+				iterator = &(itNode->key);
 			}
 			else {
-				Node<T>* save_node(it_node);
-				while (it_node->parent != 0 && it_node->parent->right == it_node)
-					it_node = it_node->parent; //если мы сейчас в правом сыне, то идем наверх, пока не станем левым сыном или пока не дойдем до корня
-				if (it_node->parent == 0) {//если мы в корне, то возвращаем +1 к последнему
-					it_node = save_node;
-					iterator = &(it_node->key) + 1;
+				Node<T>* saveNode(itNode);
+				while (itNode->parent != 0 && itNode->parent->right == itNode) {
+					itNode = itNode->parent; //если мы сейчас в правом сыне, то идем наверх, пока не станем левым сыном или пока не дойдем до корня
 				}
-				else if (it_node->parent->left == it_node) { //если мы в левом сыне, то просто переходим к родителю
-					it_node = it_node->parent;
-					iterator = &(it_node->key);
+				if (itNode->parent == 0) {//если мы в корне, то возвращаем +1 к последнему
+					itNode = saveNode;
+					iterator = &(itNode->key) + 1;
+				}
+				else if (itNode->parent->left == itNode) { //если мы в левом сыне, то просто переходим к родителю
+					itNode = itNode->parent;
+					iterator = &(itNode->key);
 				}
 			}
 			return *this;
 		}
 
-		bool operator==(const avlTreeIterator<T>& other) {
+		bool operator==(const AvlTreeIterator<T>& other) {
 			return iterator == other.iterator;
 		}
-		bool operator!=(const avlTreeIterator<T>& other) {
+		bool operator!=(const AvlTreeIterator<T>& other) {
 			return iterator != other.iterator;
 		}
 	};
 
 private:
 	//Доп. функции для балансировки
-	void recorrect(Node<T>* node) {
+	void Recorrect(Node<T>* node) {
 		int rightHeight = -1, leftHeight = -1;
 		HasRightChild(node) ? rightHeight = node->right->height : rightHeight = -1;
 		HasLeftChild(node) ? leftHeight = node->left->height : leftHeight = -1;
-		node->height = my_max(leftHeight, rightHeight) + 1;
+		node->height = MyMax(leftHeight, rightHeight) + 1;
 	}
-	int difference(Node<T>* node) {
+	int Difference(Node<T>* node) {
 		int rightHeight = -1, leftHeight = -1;
 		HasRightChild(node) ? rightHeight = node->right->height : rightHeight = -1;
 		HasLeftChild(node) ? leftHeight = node->left->height : leftHeight = -1;
 		return (leftHeight - rightHeight);
 	}
 	//Повороты
-	void smallRight(Node<T>* a) {
+	void SmallRight(Node<T>* a) {
 		Node<T>* b = a->left;
-		if (HasParent(a))
-			if (a->parent->right == a) 
+		if (HasParent(a)) {
+			if (a->parent->right == a) {
 				a->parent->right = b;
-			else a->parent->left = b;
-		else root = b;
+			}
+			else {
+				a->parent->left = b;
+			}
+		}
+		else {
+			root = b;
+		}
 
 		b->parent = a->parent;
-		if (HasRightChild(b)) 
+		if (HasRightChild(b)) {
 			b->right->parent = a;
+		}
 		a->left = b->right;
 		b->right = a;
 		a->parent = b;
 
-		recorrect(a);
-		recorrect(b);
+		Recorrect(a);
+		Recorrect(b);
 	}
-	void smallLeft(Node<T>* a) {
+	void SmallLeft(Node<T>* a) {
 		Node<T>* b = a->right;
-		if (HasParent(a))
-			if (a->parent->right == a) 
+		if (HasParent(a)) {
+			if (a->parent->right == a) {
 				a->parent->right = b;
-			else a->parent->left = b;
-		else root = b;
-
+			}
+			else {
+				a->parent->left = b;
+			}
+		}
+		else {
+			root = b;
+		}
 		b->parent = a->parent;
-		if (HasLeftChild(b)) 
+		if (HasLeftChild(b)) {
 			b->left->parent = a;
+		}
 		a->right = b->left;
 		b->left = a;
 		a->parent = b;
 
-		recorrect(a);
-		recorrect(b);
+		Recorrect(a);
+		Recorrect(b);
 	}
-	void bigRight(Node<T>* a) {
-		if (HasRightChild(a->left))
-			smallLeft(a->left);
-		else return;
-		smallRight(a);
+	void BigRight(Node<T>* a) {
+		if (HasRightChild(a->left)) {
+			SmallLeft(a->left);
+		}
+		else {
+			return;
+		}
+		SmallRight(a);
 	}
-	void bigLeft(Node<T>* a) {
-		if (HasLeftChild(a->right))
-			smallRight(a->right);
-		else return;
-		smallLeft(a);
+	void BigLeft(Node<T>* a) {
+		if (HasLeftChild(a->right)) {
+			SmallRight(a->right);
+		}
+		else {
+			return;
+		}
+		SmallLeft(a);
 	}
 	//Функция балансировки
-	void rebalance(Node<T>* n) {
+	void Rebalance(Node<T>* n) {
 		Node<T>* c = n;
 		Node<T>* b = 0;
 		Node<T>* a = 0;
-		int diff_c = 0;
-		int diff_b = 0;
-		int diff_a = 0;
-		recorrect(c);
+		int diffC = 0;
+		int diffB = 0;
+		int diffA = 0;
+		Recorrect(c);
 
 		while (HasParent(c)) {
 			b = c->parent;
-			recorrect(b);
-			diff_c = difference(c);
-			diff_b = difference(b);
-			if (diff_c <= 0 && diff_b == -2) {
-				smallLeft(b);
+			Recorrect(b);
+			diffC = Difference(c);
+			diffB = Difference(b);
+			if (diffC <= 0 && diffB == -2) {
+				SmallLeft(b);
 			}
-			else if (diff_c >= 0 && diff_b == 2) {
-				smallRight(b);
+			else if (diffC >= 0 && diffB == 2) {
+				SmallRight(b);
 			}
 			c = b;
 		}
 		//если не сработали малые повороты, то надо пройтись большими поворотами
-		c = n; diff_c = 0; diff_b = 0; diff_a = 0; b = 0; a = 0;
-		if (HasParent(c)) b = c->parent;
+		c = n; diffC = 0; diffB = 0; diffA = 0; b = 0; a = 0;
+		if (HasParent(c)) {
+			b = c->parent;
+		}
 		while (HasParent(c) && HasParent(b)) {
 			b = c->parent;
-			if (!HasParent(b)) break;
-			a = b->parent;
-			recorrect(b);
-			recorrect(a);
-			diff_c = difference(c);
-			diff_b = difference(b);
-			diff_a = difference(a);
-			if (/*diff_c <= 1 &&*/ diff_b == 1 && diff_a == -2) {
-				bigLeft(a);
+			if (!HasParent(b)) {
+				break;
 			}
-			else if (/*diff_c <= 1 && */ diff_b == -1 && diff_a == 2) {
-				bigRight(a);
+			a = b->parent;
+			Recorrect(b);
+			Recorrect(a);
+			diffC = Difference(c);
+			diffB = Difference(b);
+			diffA = Difference(a);
+			if (/*diffC <= 1 &&*/ diffB == 1 && diffA == -2) {
+				BigLeft(a);
+			}
+			else if (/*diffC <= 1 && */ diffB == -1 && diffA == 2) {
+				BigRight(a);
 			}
 			c = b;
 			b = a;
@@ -201,25 +233,18 @@ private:
 		c = n;
 		b = 0;
 	}
-	int my_max(int a, int b) {
+	int MyMax(int a, int b) {
 		return a >= b ? a : b;
 	}
 
 public:
-	avlTree() {
+	AvlTree() {
 		root = 0;
 	}
-
-	avlTree(const T* array, int size) {
-		for (int i = 0; i < size; i++) {
-			this->insert(array[i]);
-		}
-	}
-
-
-	avlTree(const avlTree<T>& other) {
-		if (other.root == 0)
+	AvlTree(const AvlTree<T>& other) {
+		if (other.root == 0) {
 			root = 0;
+		}
 		else {
 			root = new Node<T>();
 			root->parent = 0; 
@@ -228,48 +253,202 @@ public:
 			root->key = other.root->key;
 			root->height = other.root->height;
 
-			Node* n1 = root; //где были в this
-			Node* n2 = root; //куда идем в this
-			Node* other_n1 = other.root; //где были в other
-			Node* other_n2 = other.root; //куда идем в other
+			Node<T>* n1 = root; //где были в this
+			Node<T>* n2 = root; //куда идем в this
+			Node<T>* otherN1 = other.root; //где были в other
+			Node<T>* otherN2 = other.root; //куда идем в other
 			while (n2 != 0) { 
 				n1 = n2;
-				other_n1 = other_n2;
-				if (HasLeftChild(other_n1) && !HasLeftChild(n1)) {
+				otherN1 = otherN2;
+				if (HasLeftChild(otherN1) && !HasLeftChild(n1)) {
 					//если левый потомок в other не пуст, а в this пуст, то
-					other_n2 = other_n1->left; //приходим в левый потомок other
+					otherN2 = otherN1->left; //приходим в левый потомок other
 					n2 = new Node<T>(); //создаем новый узел
 					n2->parent = n1;
 					n2->left = 0;
 					n2->right = 0;
-					n2->key = other_n2->key;
-					n2->height = other_n2->height;
+					n2->key = otherN2->key;
+					n2->height = otherN2->height;
 					n1->left = n2;
 				}
-				else if (HasRightChild(other_n1) && !HasRightChild(n1)) {
+				else if (HasRightChild(otherN1) && !HasRightChild(n1)) {
 					//если правый потомок other не пуст, а в this пуст, то
-					other_n2 = other_n1->right; //переходим в правый потомок other
+					otherN2 = otherN1->right; //переходим в правый потомок other
 					n2 = new Node<T>(); //создаем новый узел
 					n2->parent = n1;
 					n2->left = 0;
 					n2->right = 0;
-					n2->key = other_n2->key;
-					n2->height = other_n2->height;
+					n2->key = otherN2->key;
+					n2->height = otherN2->height;
 					n1->right = n2;
 				}
 				else {
 					//если и правый и левый пуст - переходим в родителя
 					n2 = n1->parent;
-					other_n2 = other_n1->parent;
+					otherN2 = otherN1->parent;
 				}
 			}
 
 		}
 	}
+	AvlTree& operator=(const AvlTree& other) { //оператор присваивания
+		if (&other != this) {
+			if (root == 0) {
+				if (other.root == 0) {
+					root = 0;
+				}
+				else { //начинаем создавать новое дерево
+					root = new Node<T>(); //создаем корень
+					root->parent = 0; //заполняем
+					root->left = 0;
+					root->right = 0;
+					root->key = other.root->key;
+					root->height = other.root->height;
+					Node<T>* n1 = root; //были
+					Node<T>* n2 = root; //стали
+					Node<T>* otherN1 = other.root;
+					Node<T>* otherN2 = other.root;
+					while (n2 != 0) {
+						n1 = n2;
+						otherN1 = otherN2;
+						if (HasLeftChild(otherN1) && !HasLeftChild(n1)) {
+							otherN2 = otherN1->left;
+							n2 = new Node<T>();
+							n2->parent = n1;
+							n2->left = 0;
+							n2->right = 0;
+							n2->key = otherN2->key;
+							n2->height = otherN2->height;
+							n1->left = n2;
+						}
+						else if (HasRightChild(otherN1) && !HasRightChild(n1)) {
+							otherN2 = otherN1->right;
+							n2 = new Node<T>();
+							n2->parent = n1;
+							n2->left = 0;
+							n2->right = 0;
+							n2->key = otherN2->key;
+							n2->height = otherN2->height;
+							n1->right = n2;
+						}
+						else {
+							n2 = n1->parent;
+							otherN2 = otherN1->parent;
+						}
+					}
 
-	~avlTree() {
-		if (root == 0)
+				}
+			}
+			else { 
+				if (other.root == 0) {
+					Node<T>* n1 = root;
+					Node<T>* n2 = root;
+					while (n2 != 0) {
+						n1 = n2;
+						if (n1->left != 0) {
+							n2 = n1->left;
+							n1->left = 0;
+						}
+						else if (n2->right != 0) {
+							n2 = n1->right;
+							n1->right = 0;
+						}
+						else {
+							n2 = n1->parent;
+							delete n1;
+						}
+					}
+					delete n1;
+					delete n2;
+					root = 0;
+				}
+				else { //если были оба не пустыми
+					root->key = other.root->key;
+					Node<T>* n1 = root;
+					Node<T>* n2 = root;
+					Node<T>* otherN1 = other.root;
+					Node<T>* otherN2 = other.root;
+					while (n2 != 0) {
+						n1 = n2;
+						otherN1 = otherN2;
+						if (HasLeftChild(otherN1) && !HasLeftChild(n1)) {
+							otherN2 = otherN1->left;
+							n2 = new Node<T>();
+							n2->parent = n1;
+							n2->left = 0;
+							n2->right = 0;
+							n2->key = otherN2->key;
+							n2->height = otherN2->height;
+							n1->left = n2;
+						}
+						else if (HasRightChild(otherN1) && !HasRightChild(n1)) {
+							otherN2 = otherN1->right;
+							n2 = new Node<T>();
+							n2->parent = n1;
+							n2->left = 0;
+							n2->right = 0;
+							n2->key = otherN2->key;
+							n2->height = otherN2->height;
+							n1->right = n2;
+						}
+						else if (!HasLeftChild(otherN1) && HasLeftChild(n1)) {
+							Node<T>* newN1 = n1->left;
+							Node<T>* newN2 = n1->left;
+							while (newN2 != 0) {
+								newN1 = newN2;
+								if (newN1->left != 0) {
+									newN2 = newN1->left;
+									newN1->left = 0;
+								}
+								else if (newN2->right != 0) {
+									newN2 = newN1->right;
+									newN1->right = 0;
+								}
+								else {
+									newN2 = newN1->parent;
+									delete newN1;
+								}
+							}
+							delete newN1;
+							delete newN2;
+							n1->left = 0;
+						}
+						else if (!HasRightChild(otherN1) && HasRightChild(n1)) {
+							Node<T>* newN1 = n1->right;
+							Node<T>* newN2 = n1->right;
+							while (newN2 != NULL) {
+								newN1 = newN2;
+								if (newN1->left != 0) {
+									newN2 = newN1->left;
+									newN1->left = 0;
+								}
+								else if (newN2->right != 0) {
+									newN2 = newN1->right;
+									newN1->right = 0;
+								}
+								else {
+									newN2 = newN1->parent;
+									delete newN1;
+								}
+							}
+							delete newN1;
+							delete newN2;
+							n1->right = 0;
+						}
+						else {
+							n2 = n1->parent;
+							otherN2 = otherN1->parent;
+						}
+					}
+				}
+			}
+		}
+		return *this;
+	}
+	~AvlTree() {
+		if (root == 0) {
 			delete root;
+		}
 		else {
 			Node<T>* n1 = root; //где были в this
 			Node<T>* n2 = root; //куда идем в this
@@ -292,47 +471,54 @@ public:
 		root = 0;
 	}
 
-	int size() {
+	int Size() {
 		int count = 0;
-		for (auto i = begin(); i != end(); ++i) {
+		for (auto i = Begin(); i != End(); ++i) {
 			count++;
 		}
 		return count;
 	}
-	T* avlTreeContent() {
-		T* array = new T[size()];
+	void AvlTreeContent(T* array) {
 		int count = 0;
-		for (auto i = begin(); i != end(); ++i) {
+		auto i = Begin();
+		while (i != End()) {
 			array[count] = (*i);
 			count++;
+			++i;
 		}
-		return array;
+	}
+	void AvlTreeFilling(const T* array, const int n) {
+		for (int i = 0; i < n; i++) {
+			this->Insert(array[i]);
+		}
 	}
 
 	//итератор на начало
-	avlTreeIterator<T> begin() {
-		if (root == 0) 
-			return avlTreeIterator<T>(*root, *this);
+	AvlTreeIterator<T> Begin() {
+		if (root == 0) {
+			return AvlTreeIterator<T>(*root, *this);
+		}
 		else {
 			Node<T>* n1 = root;
 			while (n1->left != 0) {
 				n1 = n1->left;
 			}
-			return avlTreeIterator<T>(*(n1), *this);
+			return AvlTreeIterator<T>(*(n1), *this);
 		}
 	}
 	//итератор на конец
-	avlTreeIterator<T> end() {
-		if (root == 0) 
-			return avlTreeIterator<T>(*root, *this);
+	AvlTreeIterator<T> End() {
+		if (root == 0) {
+			return AvlTreeIterator<T>(*root, *this);
+		}
 		Node<T>* n1 = root;
 		while (n1->right != 0) {
 			n1 = n1->right;
 		}
-		return ++avlTreeIterator<T>(*n1, *this);
+		return ++AvlTreeIterator<T>(*n1, *this);
 	}
 
-	avlTreeIterator<T> insert(const T& key) {
+	AvlTreeIterator<T> Insert(const T& key) {
 		if (root == 0) {
 			root = new Node<T>();
 			root->parent = 0;
@@ -340,12 +526,12 @@ public:
 			root->right = 0;
 			root->key = key;
 			root->height = 0;
-			return avlTreeIterator<T>(*root, *this);
+			return AvlTreeIterator<T>(*root, *this);
 		}
 		else {
 			Node<T>* n1 = root;
 			Node<T>* n2 = 0;
-			while (n1 != 0 && n1->key != key) {
+			while (n1 != 0) {
 				n2 = n1;
 				n1->key < key ? n1 = n1->right : n1 = n1->left;
 			}
@@ -360,13 +546,11 @@ public:
 					n2->right = n1;
 				else
 					n2->left = n1;
-				rebalance(n1);
+				Rebalance(n1);
 			}
-			else if (n1->key == key) {
-				n1->key = key;
-			}
-			return avlTreeIterator<T>(*n1, *this);
+			return AvlTreeIterator<T>(*n1, *this);
 		}
 	}
+
 };
 
