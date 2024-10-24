@@ -496,7 +496,7 @@ public:
 	//итератор на начало
 	AvlTreeIterator<T> Begin() {
 		if (root == 0) {
-			return AvlTreeIterator<T>(*root, *this);
+		  return AvlTreeIterator<T>(*root, *this);
 		}
 		else {
 			Node<T>* n1 = root;
