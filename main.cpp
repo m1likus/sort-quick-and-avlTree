@@ -85,132 +85,121 @@ int main() {
   setlocale(LC_ALL, "Russian");
   // Эксперимент 1:
   // q = 1, w = 10^9, n = 1,..., 10^6+1, шаг = 10^4
- // {
-	//// Псевдослучайное заполнение
-	//const int q = 1, w = 1000000000;
-	//int i = q;
-	//std::ofstream f;
-	//f.open("Experiment1Pseudo1.csv", std::ios::out);
-	//if (f.is_open()) {
-	//  std::cout << "is open\n";
-	//}
-	//f << "N; quickSort; avlTreeSort;\n";
-	//std::cout << "N " << "quickSort " << "avlTreeSort\n";
-	//while (i < 1000001) {
-	//  const int n = i;
-	//  double* a = new double[n];
-	//  pseudoRandom(a, n, q, w);
-	//  double* a1 = new double[n];
-	//  copyArray(a1, a, n);
-	//  double* a2 = new double[n];
-	//  copyArray(a2, a, n);
+  {
+	// Псевдослучайное заполнение
+	const int q = 1, w = 1000000000;
+	int i = q;
+	std::ofstream f;
+	f.open("Experiment1PseudoQuick3.txt", std::ios::out);
+	if (f.is_open()) {
+	  std::cout << "is open\n";
+	}
+	while (i < 1000001) {
+	  const int n = i;
+	  double* a = new double[n];
+	  pseudoRandom(a, n, q, w);
+	  double* a1 = new double[n];
+	  copyArray(a1, a, n);
+	  double* a2 = new double[n];
+	  copyArray(a2, a, n);
 
-	//  const auto start1{ std::chrono::steady_clock::now() };
-	//  quickSort(a1, n);
-	//  const auto end1{ std::chrono::steady_clock::now() };
-	//  const std::chrono::duration<double> elapsed_seconds1{ end1 - start1 };
+	  const auto start1{ std::chrono::steady_clock::now() };
+	  quickSort(a1, n);
+	  const auto end1{ std::chrono::steady_clock::now() };
+	  const std::chrono::duration<double> elapsed_seconds1{ end1 - start1 };
 
-	//  const double elapsed_seconds2 = avlTreeSort(a2, n);
-	//  std::cout << n << ";" << elapsed_seconds1.count() << ";" << elapsed_seconds2 << ";\n";
-	//  f << n << ";" << elapsed_seconds1.count() << ";" << elapsed_seconds2 << ";" << "\n";
+	  //const double elapsed_seconds2 = avlTreeSort(a2, n);
+	  f << elapsed_seconds1.count() << "\n";
 
-	//  i = i + 10000;
-	//  if (!check(a1, n)) {
-	//	std::cout << "quickSort";
-	//	break;
-	//  }
-	//  if (!check(a2, n)) {
-	//	std::cout << "avlTreeSort";
-	//	break;
-	//  }
-	//  
-	//}
-	//f.close();
- // }
- // {
-	//// Заполнение по возрастанию
-	//const int q = 1, w = 1000000000;
-	//int i = q;
-	//std::ofstream f;
-	//f.open("Experiment1Increasing1.csv", std::ios::out);
-	//if (f.is_open()) {
-	//  std::cout << "is open\n";
-	//}
-	//f << "N; quickSort; avlTreeSort;\n";
-	//std::cout << "N " << "quickSort " << "avlTreeSort\n";
-	//while (i < 1000001) {
-	//  const int n = i;
-	//  double* a = new double[n];
-	//  increasing(a, n, q, w);
-	//  double* a1 = new double[n];
-	//  copyArray(a1, a, n);
-	//  double* a2 = new double[n];
-	//  copyArray(a2, a, n);
+	  i = i + 10000;
+	  if (!check(a1, n)) {
+		std::cout << "quickSort";
+		break;
+	  }
+	  /*if (!check(a2, n)) {
+		std::cout << "avlTreeSort";
+		break;
+	  }*/
+	  
+	}
+	f.close();
+  }
+  {
+	// Заполнение по возрастанию
+	const int q = 1, w = 1000000000;
+	int i = q;
+	std::ofstream f;
+	f.open("Experiment1IncreasingQuick3.txt", std::ios::out);
+	if (f.is_open()) {
+	  std::cout << "is open\n";
+	}
+	while (i < 1000001) {
+	  const int n = i;
+	  double* a = new double[n];
+	  increasing(a, n, q, w);
+	  double* a1 = new double[n];
+	  copyArray(a1, a, n);
+	  double* a2 = new double[n];
+	  copyArray(a2, a, n);
 
-	//  const auto start1{ std::chrono::steady_clock::now() };
-	//  quickSort(a1, n);
-	//  const auto end1{ std::chrono::steady_clock::now() };
-	//  const std::chrono::duration<double> elapsed_seconds1{ end1 - start1 };
+	  const auto start1{ std::chrono::steady_clock::now() };
+	  quickSort(a1, n);
+	  const auto end1{ std::chrono::steady_clock::now() };
+	  const std::chrono::duration<double> elapsed_seconds1{ end1 - start1 };
 
-	//  const double elapsed_seconds2 = avlTreeSort(a2, n);
-	//  std::cout << n << ";" << elapsed_seconds1.count() << ";" << elapsed_seconds2 << ";\n";
-	//  f << n << ";" << elapsed_seconds1.count() << ";" << elapsed_seconds2 << ";" << "\n";
+	  //const double elapsed_seconds2 = avlTreeSort(a2, n);
+	  f << elapsed_seconds1.count() << "\n";
 
-	//  i = i + 10000;
-	//  if (!check(a1, n)) {
-	//	std::cout << "quickSort";
-	//	break;
-	//  }
-	//  if (!check(a2, n)) {
-	//	std::cout << "avlTreeSort";
-	//	break;
-	//  }
+	  i = i + 10000;
+	  if (!check(a1, n)) {
+		std::cout << "quickSort";
+		break;
+	  }
+	  /*if (!check(a2, n)) {
+		std::cout << "avlTreeSort";
+		break;
+	  }*/
+	}
+	f.close();
+  }
+  {
+	// Заполнение по убыванию
+	const int q = 1, w = 1000000000;
+	int i = q;
+	std::ofstream f;
+	f.open("Experiment1DecreasingQuick3.txt", std::ios::out);
+	if (f.is_open()) {
+	  std::cout << "is open\n";
+	}
+	while (i < 1000001) {
+	  const int n = i;
+	  double* a = new double[n];
+	  decreasing(a, n, q, w);
+	  double* a1 = new double[n];
+	  copyArray(a1, a, n);
+	  double* a2 = new double[n];
+	  copyArray(a2, a, n);
 
-	//}
-	//f.close();
- // }
- // {
-	//// Заполнение по убыванию
-	//const int q = 1, w = 1000000000;
-	//int i = q;
-	//std::ofstream f;
-	//f.open("Experiment1Decreasing1.csv", std::ios::out);
-	//if (f.is_open()) {
-	//  std::cout << "is open\n";
-	//}
-	//f << "N; quickSort; avlTreeSort;\n";
-	//std::cout << "N " << "quickSort " << "avlTreeSort\n";
-	//while (i < 1000001) {
-	//  const int n = i;
-	//  double* a = new double[n];
-	//  decreasing(a, n, q, w);
-	//  double* a1 = new double[n];
-	//  copyArray(a1, a, n);
-	//  double* a2 = new double[n];
-	//  copyArray(a2, a, n);
+	  const auto start1{ std::chrono::steady_clock::now() };
+	  quickSort(a1, n);
+	  const auto end1{ std::chrono::steady_clock::now() };
+	  const std::chrono::duration<double> elapsed_seconds1{ end1 - start1 };
 
-	//  const auto start1{ std::chrono::steady_clock::now() };
-	//  quickSort(a1, n);
-	//  const auto end1{ std::chrono::steady_clock::now() };
-	//  const std::chrono::duration<double> elapsed_seconds1{ end1 - start1 };
+	  //const double elapsed_seconds2 = avlTreeSort(a2, n);
+	  f << elapsed_seconds1.count() << "\n";
 
-	//  const double elapsed_seconds2 = avlTreeSort(a2, n);
-	//  std::cout << n << ";" << elapsed_seconds1.count() << ";" << elapsed_seconds2 << ";\n";
-	//  f << n << ";" << elapsed_seconds1.count() << ";" << elapsed_seconds2 << ";" << "\n";
-
-	//  i = i + 10000;
-	//  if (!check(a1, n)) {
-	//	std::cout << "quickSort";
-	//	break;
-	//  }
-	//  if (!check(a2, n)) {
-	//	std::cout << "avlTreeSort";
-	//	break;
-	//  }
-
-	//}
-	//f.close();
- // }
+	  i = i + 10000;
+	  if (!check(a1, n)) {
+		std::cout << "quickSort";
+		break;
+	  }
+	  /*if (!check(a2, n)) {
+		std::cout << "avlTreeSort";
+		break;
+	  }*/
+	}
+	f.close();
+  }
 
   // Эксперимент 2:
   // q = 1, w = 1, ... 100, n = 10^6, шаг = 1
@@ -221,13 +210,11 @@ int main() {
 	const int  n = 1000000;
 	int i = q;
 	std::ofstream f;
-	f.open("Experiment2Pseudo3.csv", std::ios::out);
+	f.open("Experiment2PseudoQuick3.txt", std::ios::out);
 	if (f.is_open()) {
 	  std::cout << "is open\n";
 	}
-	f << "W; quickSort; avlTreeSort;\n";
-	std::cout << "W " << "quickSort " << "avlTreeSort\n";
-	while (i < 100) {
+	while (i < 101) {
 	  w = i;
 	  double* a = new double[n];
 	  pseudoRandom(a, n, q, w);
@@ -241,19 +228,18 @@ int main() {
 	  const auto end1{ std::chrono::steady_clock::now() };
 	  const std::chrono::duration<double> elapsed_seconds1{ end1 - start1 };
 
-	  const double elapsed_seconds2 = avlTreeSort(a2, n);
-	  std::cout << w << ";" << elapsed_seconds1.count() << ";" << elapsed_seconds2 << ";\n";
-	  f << w << ";" << elapsed_seconds1.count() << ";" << elapsed_seconds2 << ";\n";
+	  //const double elapsed_seconds2 = avlTreeSort(a2, n);
+	  f << elapsed_seconds1.count() << "\n";
 
 	  i++;
 	  if (!check(a1, n)) {
 		std::cout << "quickSort";
 		break;
 	  }
-	  if (!check(a2, n)) {
+	  /*if (!check(a2, n)) {
 		std::cout << "avlTreeSort";
 		break;
-	  }
+	  }*/
 	}
 	f.close();
   }
@@ -264,13 +250,11 @@ int main() {
 	const int  n = 1000000;
 	int i = q;
 	std::ofstream f;
-	f.open("Experiment2Increasing3.csv", std::ios::out);
+	f.open("Experiment2IncreasingQuick3.txt", std::ios::out);
 	if (f.is_open()) {
 	  std::cout << "is open\n";
 	}
-	f << "W; quickSort; avlTreeSort;\n";
-	std::cout << "W " << "quickSort " << "avlTreeSort\n";
-	while (i < 100) {
+	while (i < 101) {
 	  w = i;
 	  double* a = new double[n];
 	  increasing(a, n, q, w);
@@ -284,19 +268,18 @@ int main() {
 	  const auto end1{ std::chrono::steady_clock::now() };
 	  const std::chrono::duration<double> elapsed_seconds1{ end1 - start1 };
 
-	  const double elapsed_seconds2 = avlTreeSort(a2, n);
-	  std::cout << w << ";" << elapsed_seconds1.count() << ";" << elapsed_seconds2 << ";\n";
-	  f << w << ";" << elapsed_seconds1.count() << ";" << elapsed_seconds2 << ";\n";
+	  //const double elapsed_seconds2 = avlTreeSort(a2, n);
+	  f << elapsed_seconds1.count() << "\n";
 
 	  i++;
 	  if (!check(a1, n)) {
 		std::cout << "quickSort";
 		break;
 	  }
-	  if (!check(a2, n)) {
+	  /*if (!check(a2, n)) {
 		std::cout << "avlTreeSort";
 		break;
-	  }
+	  }*/
 	}
 	f.close();
   }
@@ -307,13 +290,11 @@ int main() {
 	const int  n = 1000000;
 	int i = q;
 	std::ofstream f;
-	f.open("Experiment2Decreasing3.csv", std::ios::out);
+	f.open("Experiment2DecreasingQuick3.txt", std::ios::out);
 	if (f.is_open()) {
 	  std::cout << "is open\n";
 	}
-	f << "W; quickSort; avlTreeSort;\n";
-	std::cout << "W " << "quickSort " << "avlTreeSort\n";
-	while (i < 100) {
+	while (i < 101) {
 	  w = i;
 	  double* a = new double[n];
 	  decreasing(a, n, q, w);
@@ -327,19 +308,18 @@ int main() {
 	  const auto end1{ std::chrono::steady_clock::now() };
 	  const std::chrono::duration<double> elapsed_seconds1{ end1 - start1 };
 
-	  const double elapsed_seconds2 = avlTreeSort(a2, n);
-	  std::cout << w << ";" << elapsed_seconds1.count() << ";" << elapsed_seconds2 << ";\n";
-	  f << w << ";" << elapsed_seconds1.count() << ";" << elapsed_seconds2 << ";\n";
+	  //const double elapsed_seconds2 = avlTreeSort(a2, n);
+	  f << elapsed_seconds1.count() << "\n";
 
 	  i++;
 	  if (!check(a1, n)) {
 		std::cout << "quickSort";
 		break;
 	  }
-	  if (!check(a2, n)) {
+	  /*if (!check(a2, n)) {
 		std::cout << "avlTreeSort";
 		break;
-	  }
+	  }*/
 	}
 	f.close();
   }
